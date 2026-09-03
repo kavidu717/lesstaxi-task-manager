@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db";
+import authRoutes from "./routes/authRoutes";
 
 
 dotenv.config();
@@ -15,6 +16,9 @@ const PORT = process.env.PORT
  app.use(cors())
 
  connectDB();
+
+
+ app.use("/api/auth",authRoutes)
 
  app.get("/",(req:Request,res:Response)=>{
      
