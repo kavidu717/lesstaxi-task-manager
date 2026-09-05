@@ -64,11 +64,7 @@ export default function LoginPage() {
 
                 toast.success("Login successful!");
 
-                if (userData.role === "admin") {
-                    router.replace("/admin-dashboard");
-                } else {
-                    router.replace("/dashboard");
-                }
+                router.push("/dashboard");
             }
         } catch (err: unknown) {
             if (axios.isAxiosError(err)) {
