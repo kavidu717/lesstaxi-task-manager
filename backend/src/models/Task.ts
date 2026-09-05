@@ -7,7 +7,7 @@ export interface ITask extends Document {
     title: string;
     description: string;
     status: TaskStatus;
-    creater: mongoose.Types.ObjectId;
+    creator: mongoose.Types.ObjectId;
     assignedUser: mongoose.Types.ObjectId | null;
     createdAt: Date;
     updatedAt: Date;
@@ -33,7 +33,7 @@ const taskSchema = new Schema<ITask>({
         default: "To Do",
         index: true,
     },
-    creater: {
+    creator: {
         type: Schema.Types.ObjectId,
         ref: "User",
         required: true,

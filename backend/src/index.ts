@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db";
 import authRoutes from "./routes/authRoutes";
+import taskRoutes from "./routes/taskRoutes";
 
 
 dotenv.config();
@@ -19,6 +20,7 @@ const PORT = process.env.PORT
 
 
  app.use("/api/auth",authRoutes)
+ app.use("/api/tasks", taskRoutes)
 
  app.get("/",(req:Request,res:Response)=>{
      
