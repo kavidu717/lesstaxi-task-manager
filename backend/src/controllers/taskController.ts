@@ -48,10 +48,16 @@ export const createTask = async (req:AuthRequest, res: Response) : Promise<void>
         assignedUser:null
     });
 
+
+    const populatedTask = await Task.findById(task._id).populate(
+        "creator",
+        "name email"
+    );
+
     res.status(201).json({
         status:"success",
         message:"Task created successfully",
-        data:task
+        data:populatedTask
     });
 
     }

@@ -1,15 +1,17 @@
-"use client";
-
-import { DragEvent } from "react";
+import { Task, TaskUser, TaskStatus } from "@/lib/api/tasks";
 import TaskCard from "./TaskCard";
-import type { Task, TaskStatus } from "@/lib/api/tasks";
 
 interface TaskColumnProps {
-  title: TaskStatus;
+  title: string;
   tasks: Task[];
   onDragStart: (taskId: string) => void;
   onDrop: (status: TaskStatus) => void;
   onDragEnd: () => void;
+  isAdmin?: boolean;
+  usersList?: TaskUser[];
+  currentUserId?: string;
+  onDelete: (taskId: string) => void;
+  onEdit: (task: Task) => void;
 }
 
 export default function TaskColumn({
@@ -18,43 +20,29 @@ export default function TaskColumn({
   onDragStart,
   onDrop,
   onDragEnd,
+  isAdmin,
+  usersList,
+  currentUserId,
+  onDelete,
+  onEdit,
 }: TaskColumnProps) {
-  const handleDragOver = (
-    event: DragEvent<HTMLDivElement>
-  ) => {
-    event.preventDefault();
-  };
-
-  const handleDrop = (
-    event: DragEvent<HTMLDivElement>
-  ) => {
-    event.preventDefault();
-
-    onDrop(title);
-  };
-
   return (
-    <section className="rounded-xl bg-gray-200 p-4">
+    <div
+      className="flex flex-col rounded-xl bg-gray-100 p-4"
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={() => onDrop(title as TaskStatus)}
+    >
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="font-semibold text-gray-800">
-          {title}
-        </h3>
-
-        <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-gray-600">
+        <h3 className="font-semibold text-gray-700">{title}</h3>
+        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs font-medium text-gray-600 shadow-sm">
           {tasks.length}
         </span>
       </div>
 
-      <div
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-        className="min-h-[400px] space-y-4 rounded-lg transition"
-      >
+      <div className="flex flex-col gap-3">
         {tasks.length === 0 ? (
-          <div className="rounded-lg border-2 border-dashed border-gray-300 p-6 text-center">
-            <p className="text-sm text-gray-500">
-              No tasks
-            </p>
+          <div className="flex h-24 items-center justify-center rounded-lg border-2 border-dashed border-gray-300">
+            <p className="text-sm text-gray-500">No tasks</p>
           </div>
         ) : (
           tasks.map((task) => (
@@ -63,10 +51,15 @@ export default function TaskColumn({
               task={task}
               onDragStart={onDragStart}
               onDragEnd={onDragEnd}
+              isAdmin={isAdmin}
+              usersList={usersList}
+              currentUserId={currentUserId}
+              onDelete={onDelete}
+              onEdit={onEdit}
             />
           ))
         )}
       </div>
-    </section>
+    </div>
   );
 }
