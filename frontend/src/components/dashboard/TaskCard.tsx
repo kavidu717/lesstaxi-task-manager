@@ -46,27 +46,28 @@ export default function TaskCard({
       draggable
       onDragStart={() => onDragStart(currentTask._id)}
       onDragEnd={onDragEnd}
-      className="cursor-grab rounded-lg border border-gray-200 bg-white p-4 shadow-sm active:cursor-grabbing"
+      className="group cursor-grab rounded-xl border border-gray-100 bg-white p-5 shadow-sm hover:shadow-md hover:border-blue-200 transition-all active:cursor-grabbing active:scale-95 relative overflow-hidden"
     >
-      <h4 className="font-medium text-gray-900">{currentTask.title}</h4>
-      <p className="mt-1 text-sm text-gray-500">{currentTask.description}</p>
+      <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-blue-400 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      <h4 className="font-semibold text-gray-900 leading-tight">{currentTask.title}</h4>
+      <p className="mt-2 text-sm text-gray-500 leading-relaxed">{currentTask.description}</p>
 
-      <div className="mt-4 flex flex-col gap-2 text-xs text-gray-500">
-        <div>
-          <span className="block text-gray-400">Created by</span>
-          <span className="font-medium text-gray-700">
+      <div className="mt-5 flex flex-col gap-3 rounded-lg bg-gray-50/50 p-3 text-xs text-gray-500 border border-gray-50">
+        <div className="flex items-center justify-between">
+          <span className="font-medium text-gray-400">Created by</span>
+          <span className="font-semibold text-gray-700 bg-white px-2 py-1 rounded-md shadow-sm border border-gray-100">
             {currentTask.creator?.name || "Unknown"}
           </span>
         </div>
 
-        <div>
-          <span className="block text-gray-400 mb-1">Assigned to</span>
+        <div className="flex flex-col gap-1.5">
+          <span className="font-medium text-gray-400">Assigned to</span>
           {isAdmin ? (
             <select
               value={currentTask.assignedUser?._id || ""}
               onChange={(e) => handleAssign(e.target.value || null)}
               disabled={isAssigning}
-              className="w-full rounded border border-gray-300 p-1 text-sm text-gray-700 outline-none focus:border-black"
+              className="w-full rounded-lg border border-gray-200 bg-white p-2 text-sm font-medium text-gray-700 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 shadow-sm"
             >
               <option value="">Unassigned</option>
               {usersList?.map((user) => (
@@ -78,14 +79,14 @@ export default function TaskCard({
           ) : (
             <div>
               {currentTask.assignedUser ? (
-                <span className="font-medium text-gray-700">
+                <span className="inline-block font-semibold text-blue-700 bg-blue-50 px-2 py-1 rounded-md border border-blue-100 shadow-sm">
                   {currentTask.assignedUser.name}
                 </span>
               ) : (
                 <button
                   onClick={() => handleAssign(currentUserId as string)}
                   disabled={isAssigning}
-                  className="rounded bg-black px-2 py-1 text-white hover:bg-gray-800 transition disabled:opacity-50"
+                  className="w-full rounded-lg bg-gray-900 px-3 py-2 font-medium text-white shadow-sm hover:bg-gray-800 transition-all disabled:opacity-50"
                 >
                   {isAssigning ? "Assigning..." : "Assign to me"}
                 </button>
@@ -96,16 +97,16 @@ export default function TaskCard({
       </div>
 
       {canModify && (
-        <div className="mt-4 flex gap-2">
+        <div className="mt-4 flex gap-2 pt-4 border-t border-gray-100">
           <button
             onClick={() => onEdit(currentTask)}
-            className="rounded border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 transition"
+            className="flex-1 rounded-lg bg-gray-50 px-3 py-2 text-xs font-semibold text-gray-700 border border-gray-200 hover:bg-white hover:border-gray-300 hover:shadow-sm transition-all"
           >
             Edit
           </button>
           <button
             onClick={() => onDelete(currentTask._id)}
-            className="rounded border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 transition"
+            className="flex-1 rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-600 border border-red-100 hover:bg-red-100 hover:border-red-200 transition-all"
           >
             Delete
           </button>

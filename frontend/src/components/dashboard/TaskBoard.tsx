@@ -176,22 +176,23 @@ export default function TaskBoard() {
 
   if (loading || !user) {
     return (
-      <section className="mx-auto max-w-7xl px-6 py-8">
-        <div className="flex min-h-[300px] items-center justify-center">
-          <p className="text-sm text-gray-500">Loading workspace...</p>
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 py-8">
+        <div className="flex min-h-[400px] flex-col items-center justify-center gap-4">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600"></div>
+          <p className="text-sm font-medium text-gray-500">Loading workspace...</p>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="mx-auto max-w-7xl px-6 py-8">
-      <div className="mb-8 flex items-center justify-between">
+    <section className="mx-auto max-w-7xl px-4 sm:px-6 py-8">
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">
-            {isAdmin ? "All System Tasks" : "My Tasks"}
+          <h2 className="text-3xl font-black tracking-tight text-gray-900">
+            {isAdmin ? "System Overview" : "My Workspace"}
           </h2>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-2 text-sm font-medium text-gray-500">
             {isAdmin
               ? "Manage and reassign tasks across the system"
               : "Manage and track your tasks"}
@@ -200,42 +201,46 @@ export default function TaskBoard() {
         <button
           type="button"
           onClick={() => setShowCreateForm(true)}
-          className="rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
+          className="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-95"
         >
           + Create Task
         </button>
       </div>
 
       {error && (
-        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-center">
-          <p className="text-sm text-red-600">{error}</p>
+        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-center shadow-sm">
+          <p className="text-sm font-medium text-red-600">{error}</p>
         </div>
       )}
 
       {updatingTask && (
-        <div className="mb-4 text-center">
-          <p className="text-sm text-gray-500">Updating task status...</p>
+        <div className="mb-6 flex justify-center">
+          <span className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700 border border-blue-100 shadow-sm">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-blue-600"></span>
+            Updating task status...
+          </span>
         </div>
       )}
 
       {showCreateForm && (
-        <div className="mb-8 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="mb-5 flex items-center justify-between">
+        <div className="mb-10 relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 sm:p-8 shadow-xl shadow-gray-200/50">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-purple-600"></div>
+          <div className="mb-6 flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">Create New Task</h3>
-              <p className="mt-1 text-sm text-gray-500">Add a new task to your board.</p>
+              <h3 className="text-xl font-bold text-gray-900">Create New Task</h3>
+              <p className="mt-1 text-sm font-medium text-gray-500">Add a new task to your board.</p>
             </div>
             <button
               type="button"
               onClick={handleCloseCreateForm}
-              className="text-gray-400 hover:text-gray-700"
+              className="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
             >
               ✕
             </button>
           </div>
           <form onSubmit={handleCreateTask} className="space-y-5">
             <div>
-              <label htmlFor="title" className="mb-2 block text-sm font-medium text-gray-700">Title</label>
+              <label htmlFor="title" className="mb-2 block text-sm font-bold text-gray-700">Title</label>
               <input
                 id="title"
                 type="text"
@@ -243,11 +248,11 @@ export default function TaskBoard() {
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter task title"
                 disabled={creatingTask}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none transition focus:border-black"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium outline-none transition-all focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
               />
             </div>
             <div>
-              <label htmlFor="description" className="mb-2 block text-sm font-medium text-gray-700">Description</label>
+              <label htmlFor="description" className="mb-2 block text-sm font-bold text-gray-700">Description</label>
               <textarea
                 id="description"
                 value={description}
@@ -255,22 +260,22 @@ export default function TaskBoard() {
                 placeholder="Enter task description"
                 rows={4}
                 disabled={creatingTask}
-                className="w-full resize-none rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none transition focus:border-black"
+                className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium outline-none transition-all focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
               />
             </div>
-            <div className="flex justify-end gap-3">
+            <div className="flex flex-col sm:flex-row justify-end gap-3 pt-2">
               <button
                 type="button"
                 onClick={handleCloseCreateForm}
                 disabled={creatingTask}
-                className="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+                className="w-full sm:w-auto rounded-xl border border-gray-200 bg-white px-6 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={creatingTask}
-                className="rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+                className="w-full sm:w-auto rounded-xl bg-gray-900 px-6 py-2.5 text-sm font-bold text-white shadow-md hover:bg-black hover:shadow-lg transition-all disabled:opacity-50"
               >
                 {creatingTask ? "Creating..." : "Create Task"}
               </button>
@@ -280,56 +285,57 @@ export default function TaskBoard() {
       )}
 
       {editingTask && (
-        <div className="mb-8 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="mb-5 flex items-center justify-between">
+        <div className="mb-10 relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 sm:p-8 shadow-xl shadow-gray-200/50">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-purple-600"></div>
+          <div className="mb-6 flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">Edit Task</h3>
-              <p className="mt-1 text-sm text-gray-500">Update task details.</p>
+              <h3 className="text-xl font-bold text-gray-900">Edit Task</h3>
+              <p className="mt-1 text-sm font-medium text-gray-500">Update task details.</p>
             </div>
             <button
               type="button"
               onClick={() => setEditingTask(null)}
-              className="text-gray-400 hover:text-gray-700"
+              className="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
             >
               ✕
             </button>
           </div>
           <form onSubmit={handleEditSubmit} className="space-y-5">
             <div>
-              <label htmlFor="editTitle" className="mb-2 block text-sm font-medium text-gray-700">Title</label>
+              <label htmlFor="editTitle" className="mb-2 block text-sm font-bold text-gray-700">Title</label>
               <input
                 id="editTitle"
                 type="text"
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
                 disabled={isSubmittingEdit}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none transition focus:border-black"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium outline-none transition-all focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
               />
             </div>
             <div>
-              <label htmlFor="editDescription" className="mb-2 block text-sm font-medium text-gray-700">Description</label>
+              <label htmlFor="editDescription" className="mb-2 block text-sm font-bold text-gray-700">Description</label>
               <textarea
                 id="editDescription"
                 value={editDescription}
                 onChange={(e) => setEditDescription(e.target.value)}
                 rows={4}
                 disabled={isSubmittingEdit}
-                className="w-full resize-none rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none transition focus:border-black"
+                className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium outline-none transition-all focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
               />
             </div>
-            <div className="flex justify-end gap-3">
+            <div className="flex flex-col sm:flex-row justify-end gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => setEditingTask(null)}
                 disabled={isSubmittingEdit}
-                className="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+                className="w-full sm:w-auto rounded-xl border border-gray-200 bg-white px-6 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isSubmittingEdit}
-                className="rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+                className="w-full sm:w-auto rounded-xl bg-gray-900 px-6 py-2.5 text-sm font-bold text-white shadow-md hover:bg-black hover:shadow-lg transition-all disabled:opacity-50"
               >
                 {isSubmittingEdit ? "Updating..." : "Update Task"}
               </button>
@@ -338,7 +344,7 @@ export default function TaskBoard() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <TaskColumn
           title="To Do"
           tasks={todoTasks}
@@ -380,24 +386,24 @@ export default function TaskBoard() {
       {isAdmin && usersList.length > 0 && (
         <div className="mt-16">
           <div className="mb-6">
-            <h3 className="text-xl font-bold text-gray-900">System Users</h3>
-            <p className="mt-1 text-sm text-gray-500">List of all registered users in the system</p>
+            <h3 className="text-2xl font-black text-gray-900 tracking-tight">System Users</h3>
+            <p className="mt-2 text-sm font-medium text-gray-500">List of all registered users in the system</p>
           </div>
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+          <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Name</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Email</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">User ID</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Name</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Email</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500">User ID</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
                 {usersList.map((systemUser) => (
-                  <tr key={systemUser._id} className="hover:bg-gray-50">
-                    <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">{systemUser.name}</td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">{systemUser.email}</td>
-                    <td className="whitespace-nowrap px-6 py-4 text-xs text-gray-400 font-mono">{systemUser._id}</td>
+                  <tr key={systemUser._id} className="hover:bg-gray-50/80 transition-colors">
+                    <td className="whitespace-nowrap px-6 py-4 text-sm font-bold text-gray-900">{systemUser.name}</td>
+                    <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-500">{systemUser.email}</td>
+                    <td className="whitespace-nowrap px-6 py-4 text-xs font-medium text-gray-400 font-mono">{systemUser._id}</td>
                   </tr>
                 ))}
               </tbody>

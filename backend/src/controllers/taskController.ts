@@ -71,42 +71,46 @@ export const createTask = async (req:AuthRequest, res: Response) : Promise<void>
 
 }
 
-export const getTasks = async (req:AuthRequest, res: Response) : Promise<void> => {
-    try{
-
+export const getTasks = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
         const userId = req.user?._id;
         const role = req.user?.role;
 
-        if(!userId || !role){
+        if (!userId || !role) {
             res.status(401).json({
-                message:"Unauthorized"
+                message: "Unauthorized"
             });
             return;
         }
 
         let tasks;
 
-        if(role === "admin"){
-            tasks = await Task.find().populate("creator", "name email").sort({createdAt:-1});
-        }else{
-            tasks = await Task.find({$or:[
-                {creator:userId}
-                ,{assignedUser:userId},
-                {assignedUser:null}
-            ]}).populate("creator", "name email").sort({createdAt:-1});
+        if (role === "admin") {
+            tasks = await Task.find()
+                .populate("creator assignedUser", "name email")
+                .sort({ createdAt: -1 });
+        } else {
+            tasks = await Task.find({
+                $or: [
+                    { assignedUser: userId },
+                    { assignedUser: null }
+                ]
+            })
+            .populate("creator assignedUser", "name email")
+            .sort({ createdAt: -1 });
         }
 
         res.status(200).json({
-            status:"success",
-            results:tasks.length,
-            data:tasks
+            status: "success",
+            results: tasks.length,
+            data: tasks
         });
 
-    }catch(error:unknown){
+    } catch (error: unknown) {
         const message = error instanceof Error ? error.message : "Internal server error";
         console.error("Error fetching tasks:", message);
         res.status(500).json({
-            status:"fail",
+            status: "fail",
             message
         });
     }
