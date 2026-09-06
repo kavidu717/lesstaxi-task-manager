@@ -1,6 +1,6 @@
 import express from 'express'
 import { protect } from '../middleware/authMiddleware';
-import { assignTask, createTask, deleteTask, getTasks, updateTaskStatus } from '../controllers/taskController';
+import { assignTask, createTask, deleteTask, getTasks, updateTaskStatus , updateTask} from '../controllers/taskController';
 
 
 const router=express.Router()
@@ -12,6 +12,7 @@ router.post("/", protect, createTask);
 router.get("/", protect, getTasks);
 router.patch("/:id/status", protect, updateTaskStatus);
 router.patch("/:id/assign", protect, assignTask);
+router.patch("/:id", protect, updateTask);
 router.delete("/:id", protect, deleteTask);
 
 

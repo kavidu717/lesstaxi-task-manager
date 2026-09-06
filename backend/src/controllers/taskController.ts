@@ -372,3 +372,90 @@ export const deleteTask = async (req:AuthRequest, res: Response) : Promise<void>
     }
 
 }
+
+export const updateTask = async (req:AuthRequest, res: Response) : Promise<void> => {
+    try{
+
+        const id = req.params.id;
+
+        const {title, description} = req.body;
+
+        const userId = req.user?._id;
+        const role = req.user?.role;
+
+        if(!userId || !role){
+            res.status(401).json({
+                message:"Unauthorized"
+            });
+            return;
+        }
+
+        if (typeof id !== "string" || !mongoose.Types.ObjectId.isValid(id)) {
+
+            res.status(400).json({
+                status: "fail",
+                message: "Invalid task ID",
+            });
+            return;
+        }
+
+        if (
+            typeof title !== "string" ||
+            !title.trim() ||
+            typeof description !== "string" ||
+            !description.trim()
+          ) {
+            res.status(400).json({
+              status: "fail",
+              message: "Title and description are required",
+            });
+            return;
+          }
+
+        const task = await Task.findById(id);
+
+
+        if(!task){
+            res.status(404).json({
+                status:"fail",
+                message:"Task not found"
+            });
+            return;
+        }
+
+        if(role !== "admin"){
+            const isCreator = task.creator.toString() === userId.toString();
+
+            if(!isCreator){
+                res.status(403).json({
+                    status:"fail",
+                    message:"You are not authorized to update this task"
+                });
+                return;
+            }
+        }
+
+        task.title = title.trim();
+        task.description = description.trim();
+
+        await task.save();
+
+        const updatedTask = await Task.findById(id).populate(
+            "creator assignedUser",
+            "name email"
+        );
+
+        res.status(200).json({
+            status:"success",
+            message:"Task updated successfully",
+            data:updatedTask
+        });
+
+    }catch(error:unknown){
+        console.error("Error updating task:", error);
+        res.status(500).json({
+            status:"fail",
+            message:"Internal server error"
+        });
+    }
+}
