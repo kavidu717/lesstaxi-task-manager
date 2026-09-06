@@ -1,104 +1,38 @@
-
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskColumn from "./TaskColumn";
+import { getTasks, type Task } from "@/lib/api/tasks";
 
-export type TaskStatus = "To Do" | "Doing" | "Done";
 
-export interface Task {
-  id: string;
-  title: string;
-  description: string;
-  status: TaskStatus;
-  creator: string;
-  assignedUser: string | null;
-}
-
-const initialTasks: Task[] = [
-  {
-    id: "1",
-    title: "Create Login Page",
-    description:
-      "Build the login UI with email and password fields.",
-    status: "To Do",
-    creator: "Kavidu",
-    assignedUser: null,
-  },
-  {
-    id: "2",
-    title: "Create REST API",
-    description:
-      "Implement task management REST APIs.",
-    status: "To Do",
-    creator: "Kavidu",
-    assignedUser: "John",
-  },
-  {
-    id: "3",
-    title: "Database Setup",
-    description:
-      "Configure MongoDB and create task schema.",
-    status: "Doing",
-    creator: "Kavidu",
-    assignedUser: "Kavidu",
-  },
-  {
-    id: "4",
-    title: "Authentication",
-    description:
-      "Implement JWT authentication and authorization.",
-    status: "Doing",
-    creator: "John",
-    assignedUser: "Kavidu",
-  },
-  {
-    id: "5",
-    title: "Project Documentation",
-    description:
-      "Write README and setup instructions.",
-    status: "Done",
-    creator: "Kavidu",
-    assignedUser: "Kavidu",
-  },
-];
 
 export default function TaskBoard() {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const [draggedTaskId, setDraggedTaskId] = useState<string | null>(
-    null
-  );
 
-  // Drag start
-  const handleDragStart = (taskId: string) => {
-    setDraggedTaskId(taskId);
-  };
 
-  // Drop task into another column
-  const handleDrop = (newStatus: TaskStatus) => {
-    if (!draggedTaskId) {
-      return;
-    }
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        setLoading(true);
+        setError("");
 
-    setTasks((currentTasks) =>
-      currentTasks.map((task) =>
-        task.id === draggedTaskId
-          ? {
-              ...task,
-              status: newStatus,
-            }
-          : task
-      )
-    );
+        const data = await getTasks();
 
-    setDraggedTaskId(null);
-  };
+        setTasks(data);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
 
-  // Drag ended
-  const handleDragEnd = () => {
-    setDraggedTaskId(null);
-  };
+        setError("Failed to load tasks. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTasks();
+  }, []);
 
   const todoTasks = tasks.filter(
     (task) => task.status === "To Do"
@@ -112,11 +46,32 @@ export default function TaskBoard() {
     (task) => task.status === "Done"
   );
 
+  if (loading) {
+    return (
+      <section className="mx-auto max-w-7xl px-6 py-8">
+        <div className="flex min-h-[300px] items-center justify-center">
+          <p className="text-sm text-gray-500">
+            Loading tasks...
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="mx-auto max-w-7xl px-6 py-8">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-center">
+          <p className="text-sm text-red-600">
+            {error}
+          </p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="mx-auto max-w-7xl px-6 py-8">
-
-      {/* Page Header */}
-
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">
@@ -129,43 +84,38 @@ export default function TaskBoard() {
         </div>
 
         <button
-          className="rounded-lg bg-black px-5 py-2.5 text-sm
-          font-medium text-white transition hover:bg-gray-800"
+          type="button"
+          className="rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
         >
           + Create Task
         </button>
       </div>
 
-      {/* Task Board */}
-
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-
         <TaskColumn
           title="To Do"
           tasks={todoTasks}
-          onDragStart={handleDragStart}
-          onDrop={handleDrop}
-          onDragEnd={handleDragEnd}
+          onDragStart={() => {}}
+          onDrop={() => {}}
+          onDragEnd={() => {}}
         />
 
         <TaskColumn
           title="Doing"
           tasks={doingTasks}
-          onDragStart={handleDragStart}
-          onDrop={handleDrop}
-          onDragEnd={handleDragEnd}
+          onDragStart={() => {}}
+          onDrop={() => {}}
+          onDragEnd={() => {}}
         />
 
         <TaskColumn
           title="Done"
           tasks={doneTasks}
-          onDragStart={handleDragStart}
-          onDrop={handleDrop}
-          onDragEnd={handleDragEnd}
+          onDragStart={() => {}}
+          onDrop={() => {}}
+          onDragEnd={() => {}}
         />
-
       </div>
     </section>
   );
 }
-
