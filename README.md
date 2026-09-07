@@ -14,14 +14,12 @@ The project is built using modern, robust web technologies:
 
 ## Application Screenshots
 
-*(Please add screenshots of the application below)*
-
+- **Login Page:**
+  ![Login Screenshot](./screenshots/login.png)
+- **Register Page:**
+  ![Register Screenshot](./screenshots/register.png)
 - **Dashboard View:**
-  ![Dashboard Screenshot Placeholder](./screenshots/dashboard.png)
-- **Task Management / Modals:**
-  ![Task Management Screenshot Placeholder](./screenshots/task_management.png)
-- **Mobile Responsive View:**
-  ![Mobile View Screenshot Placeholder](./screenshots/mobile_view.png)
+  ![Dashboard Screenshot](./screenshots/dashboard.png)
 
 ## Environment Variables
 
