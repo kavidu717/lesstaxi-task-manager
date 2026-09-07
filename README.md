@@ -83,6 +83,15 @@ Follow the steps below to run the application locally.
 
 ## Deployment Information
 
-- **Backend:** Can be deployed to services like Render, Heroku, or DigitalOcean. Ensure you set the environment variables in your hosting provider's dashboard.
-- **Frontend:** Optimized for deployment on [Vercel](https://vercel.com/) or Netlify. Configure the build command (`npm run build`) and output directory according to Next.js standards.
-- **Database:** Uses MongoDB Atlas for a scalable cloud database solution. Make sure to whitelist your production backend's IP address in MongoDB Atlas settings.
+This application is currently deployed using **AWS EC2** with domain management handled via **GoDaddy**.
+
+- **Infrastructure:** Hosted on an AWS EC2 instance. Ensure that necessary security groups are configured to allow incoming HTTP/HTTPS traffic.
+- **Domain & DNS:** The custom domain is registered and managed through GoDaddy, with DNS records pointing to the AWS EC2 instance's public IP address.
+- **Database:** Uses MongoDB Atlas for a scalable cloud database solution. Make sure to whitelist your AWS EC2 instance's IP address in the MongoDB Atlas network access settings.
+
+### Alternative Deployment Options
+
+If you wish to deploy the frontend and backend separately on specialized hosting platforms, consider the following options:
+
+- **Backend:** The Node.js/Express API can be deployed to Platform-as-a-Service (PaaS) providers such as [Render](https://render.com/), [Heroku](https://www.heroku.com/), or [DigitalOcean App Platform](https://www.digitalocean.com/products/app-platform). Make sure to configure the required environment variables in your chosen provider's dashboard.
+- **Frontend:** The Next.js frontend is optimized for deployment on Serverless/Edge networks like [Vercel](https://vercel.com/) (recommended for Next.js) or [Netlify](https://www.netlify.com/). These platforms automatically detect Next.js and configure the correct build settings.
