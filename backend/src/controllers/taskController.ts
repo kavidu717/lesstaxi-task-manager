@@ -17,7 +17,9 @@ export const createTask = async (req:AuthRequest, res: Response) : Promise<void>
     try{
 
         const {title, description} = req.body;
+          
 
+        // if user is exists, get the user id from the request object
         const creatorId = req.user?._id;
 
         if(!creatorId){
@@ -27,6 +29,7 @@ export const createTask = async (req:AuthRequest, res: Response) : Promise<void>
             return;
         }
 
+        // check if title and description are provided and are non-empty strings
          if (
       typeof title !== "string" ||
       !title.trim() ||
@@ -48,7 +51,7 @@ export const createTask = async (req:AuthRequest, res: Response) : Promise<void>
         assignedUser:null
     });
 
-
+      // populate the creator field
     const populatedTask = await Task.findById(task._id).populate(
         "creator",
         "name email"
@@ -73,6 +76,8 @@ export const createTask = async (req:AuthRequest, res: Response) : Promise<void>
 
 export const getTasks = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
+
+        // get the user id and role from the request object
         const userId = req.user?._id;
         const role = req.user?.role;
 
@@ -118,7 +123,8 @@ export const getTasks = async (req: AuthRequest, res: Response): Promise<void> =
 
 export const updateTaskStatus = async (req:AuthRequest, res: Response) : Promise<void> => {
     try{
-
+           
+        // get the task id from the request params
         const id = req.params.id;
 
         const {status} = req.body;
@@ -133,7 +139,7 @@ export const updateTaskStatus = async (req:AuthRequest, res: Response) : Promise
             return;
         }
 
-
+       // validate task ID
         if (typeof id !== "string" || !mongoose.Types.   ObjectId.isValid(id)) {
           res.status(400).json({
            status: "fail",
@@ -181,10 +187,14 @@ export const updateTaskStatus = async (req:AuthRequest, res: Response) : Promise
      task.status = status as TaskStatus;
      await task.save();
 
+     const updatedTask = await Task.findById(id)
+  .populate("creator", "name email role")
+  .populate("assignedUser", "name email role");
+
         res.status(200).json({
             status:"success",
             message:"Task status updated successfully",
-            data:task
+            data:updatedTask
         });
 
          

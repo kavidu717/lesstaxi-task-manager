@@ -18,7 +18,7 @@ import { loginSchema, registerSchema } from "../schemas/authValidation";
 
 
    router.post("/login",
-    loginLimiter,
+  
     sanitizeData,
     validate(loginSchema),
     loginUser)

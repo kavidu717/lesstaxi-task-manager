@@ -27,6 +27,7 @@ const seedAdmin = async () : Promise<void> => {
 
         if (existingAdmin) {
             console.log("Admin user already exists. No action taken.");
+            return;
         }
 
          // hash the password before saving
